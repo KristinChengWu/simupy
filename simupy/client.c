@@ -1,9 +1,10 @@
 /* 
 @author Kristin Cheng Wu
-@date 2023-02-16
+@date Winter 2023
 @desciption This S-Function acts as a client and communicates with a Python server through TCP/IP. 
 
-Based off of sim_SendToXPlane.c, sim_RecvFromXPlane.c and https://www.uiam.sk/pc09/data/papers/061.pdf
+Based off of sim_SendToXPlane.c, sim_RecvFromXPlane.c and https://www.uiam.sk/pc09/data/papers/061.pdf. 
+See sfuntmpl_doc.c for more details on the macros below.
 */
 
 #define S_FUNCTION_NAME client
@@ -17,10 +18,11 @@ Based off of sim_SendToXPlane.c, sim_RecvFromXPlane.c and https://www.uiam.sk/pc
 #include <stdio.h>
 
 // constants
+#define NUM_BYTES 8
 #define N_INPUT 1 
 #define N_OUTPUT 1
-#define SEND_SIZE N_INPUT*8
-#define RECV_SIZE N_OUTPUT*8
+#define SEND_SIZE N_INPUT*NUM_BYTES
+#define RECV_SIZE N_OUTPUT*NUM_BYTES
 
 #define N_PARAMS 0
 #define LOCALHOST "127.0.0.1"
@@ -143,7 +145,6 @@ int RecvData(SimStruct *S, void * RecvBuffer)
  *====================*/
 
 /* Calls this function during initialization to inquire about ports, states, etc.
- * See sfuntmpl_doc.c for more details on the macros below.
  * @S: SimStruct data structure which Simulink uses to maintain info about the S-Function
  */
 static void mdlInitializeSizes(SimStruct *S)
@@ -181,9 +182,9 @@ static void mdlInitializeSizes(SimStruct *S)
     ssSetNumModes(S, 0);
     ssSetNumNonsampledZCs(S, 0);
 
+    ssSetOptions(S, 0);
     // specifying these options together with exception-free code speeds up execution of s-function
     //ssSetOptions(S, SS_OPTION_WORKS_WITH_CODE_REUSE | SS_OPTION_EXCEPTION_FREE_CODE | SS_OPTION_USE_TLC_WITH_ACCELERATOR);
-    ssSetOptions(S, 0);
 }
 
 /* Calls this function during initialization to set the sample times of the S-function.
